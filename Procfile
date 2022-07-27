@@ -1,0 +1,1 @@
+web: gunicorn CryptoMassIdeation.wsgi --log-file=-
