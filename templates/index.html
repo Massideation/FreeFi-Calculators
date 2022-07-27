@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Crypto MassIdeation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+          <h1>Crypto MassIdeation</h1>
+            <div class="settings">
+            <p></p>
+            <div class="parameters">
+                <form class="row g-3" action="/" method="POST">{% csrf_token %}
+                    <div class="col-md-3">
+                      <label for="crypto_coin" class="form-label">Select Coin</label>
+                      <select id="crypto_coin" class="form-select" name="coin" required>
+                        <option disabled>Choose...</option>
+                        <option value="BTC">BTC</option>
+                        <option value="ETH">ETH</option>
+                        <option value="MATIC">MATIC</option>
+                        <option value="LINK">LINK</option>
+                        <option value="AAVE">AAVE</option>
+                        <option value="CRV">CRV</option>
+                        <option value="SUSHI">SUSHI</option>
+                        <option value="GHST">GHST</option>
+                        <!-- <option value="DPI">DPI</option> -->
+                      </select>
+                    </div>
+                    <!-- <div class="col-md-4">
+                        <label for="crypto_pair" class="form-label">Pair</label>
+                        <select id="crypto_pair" class="form-select" name="pair" required>
+                        <option disabled>Choose...</option>
+                        <option value="USDT">USD Tether</option>
+                        <option value="USDC">USD Coin</option>
+                      </select>        
+                    </div> -->
+                    <div class="col-md-3">
+                        <label for="inputInterval" class="form-label">Select Interval</label>
+                        <select id="inputInterval" class="form-select" name="interval" required>
+                        <option disabled>Choose...</option>
+                        <option value="1DAY">1 Day</option>
+                        <option value="12HOUR">12 Hour</option>
+                        <option value="8HOUR">8 Hour</option>
+                        <option value="6HOUR">6 Hour</option>
+                        <option value="4HOUR">4 Hour</option>
+                        <option value="2HOUR">2 Hour</option>
+                        <option value="1HOUR">1 Hour</option>
+                        <option value="30MINUTE">30 Min</option>
+                        <option value="15MINUTE">15 Min</option>
+                        <option value="5MINUTE">5 Min</option>
+                        <option value="3MINUTE">3 Min</option>
+                        <option value="1MINUTE">1 Min</option>
+                        <option value="1WEEK">1 Week</option>
+                        <!-- <option value="1MONTH">1 Month</option> -->
+                      </select>        
+                    </div>
+                    <div class="col-md-3">
+                        <label for="inputStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="inputStartDate" name ="start" required>
+                    </div>
+                    <!-- <div class="col-md-2">
+                      <label for="inputStartTime" class="form-label">Start Time</label>
+                      <input type="time" class="form-control" id="inputStartTime" name="start_time" placeholder="Ex: 4 Jul, 2022" required>
+                    </div>                     -->
+                    <div class="col-md-3">
+                        <label for="inputEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="inputEndDate" name="end" required>
+                    </div>
+                    <!-- <div class="col-md-2">
+                      <label for="inputEndTime" class="form-label">End Time</label>
+                      <input type="time" class="form-control" id="inputEndTime" name="end_time" placeholder="Ex: 4 Jul, 2022" required>
+                    </div> -->
+                    <div class="col-md-3">
+                      <label for="inputBuyPercent" class="form-label">Buy Percent</label>
+                      <input type="text" class="form-control" id="inputBuyPercent" name="buyPercent" placeholder="Ex: 5.0">
+                    </div>
+                    <div class="col-md-3">
+                      <label for="inputsellPercent" class="form-label">Sell Percent</label>
+                      <input type="text" class="form-control" id="inputsellPercent" name="sellPercent" placeholder="Ex: 3.0">
+                    </div>
+                    <div class="col-md-6 align-self-end">
+                      <button id="simulate_btn" type="submit" style="width : 100%;" class="btn btn-primary">Simulate Strategy</button>
+                    </div>
+                  </form>
+            </div>
+        </div>
+        {% if memory_exceeded_limit %}
+        <p></p>
+        <div class="alert alert-danger" role="alert">
+          <p>
+            <span>Selected Time-frame : {{start_date}} to {{end_date}} and Interval : {{interval}}</span><br>
+            Amount of data requested has exceeded the limit
+          </p>
+        </div>
+        <div class="alert alert-warning" role="alert">
+          <p>
+            Please select a smaller Time-frame ( start and end date )<br>
+            OR<br>
+            select a larger Interval
+          </p>
+        </div>
+        {% endif %}
+        
+        {% if result %}
+        <p></p>
+            <div class="row results">
+              <h3 style="text-align: center;">Results</h3>
+                <div class="col-md-12">
+                  <table class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col">Selected Crypto</th>
+                          <th scope="col">Starting Balance</th>
+                          <th scope="col">Selected Timeframe</th>
+                          <th scope="col">Selected Interval</th>
+                          <th scope="col">Buy Percent</th>
+                          <th scope="col">Sell Percent</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">{{symbol}}</th>
+                          <td>1000 USD</td>
+                          <td>{{start_date}} to {{end_date}}</td>
+                          <td>{{interval}}</td>
+                          <td>{{buy_percent}}</td>
+                          <td>{{sell_percent}}</td>
+                        </tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div class="col-md-7">
+                  <table class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">MACD Strategy</th>
+                          <th scope="col">Buy and Hold</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Final Balance USD</th>
+                          <td>{{final_balance}}</td>
+                          <td>{{buyandhold_balance}}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Profit USD</th>
+                          <td>{{profit}}</td>
+                          <td>{{buyandhold_profit}}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Percentage-Profit</th>
+                          <td>{{profit_percent}} %</td>
+                          <td>{{bnh_percentage}} %</td>
+                        </tr>
+                      </tbody>
+                  </table>
+                </div>
+                <div class="col-md-5">
+                  <table class="table table-hover">
+                    <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">Portfolio Stats</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Final Balance USD</th>
+                          <td>{{end_USD}} USD</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Final Balance {{symbol}}</th>
+                          <td>{{end_Coin}} USD</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Final Portfolio Value</th>
+                          <td>{{end_portfolio}} USD</td>
+                        </tr>
+                    </tbody>
+                 </table>
+                </div>
+            </div>
+            <div class="chart mb-3"></div>
+            <form clas="g-3" action="download_file/" method="POST">{% csrf_token %}
+              <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                  <button id="download_btn" type="submit" style="width : 100%;" class="btn btn-outline-success ">Download Results in Excel</button>
+                </div>
+              </div>
+            </form>  
+        {% endif %}
+        <!-- styling for the loading spinner -->
+        <style>
+            .spinner-border{
+                height : 1.0rem;
+                width : 1.0rem;
+            }
+        </style>
+        <!-- Jquery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <!-- AJAX -->
+        <script>
+            jQuery(function($){
+                $(document).ajaxSend(function() {
+
+                    $(".spinner-border").fadeIn(500);
+
+                    var loading = `<div class="spinner-border"></div>&nbsp;&nbsp; Please Wait...`
+                    $("#simulate_btn").html(loading);
+                });
+
+                $("#simulate_btn").click(function(){
+                    $.ajax({
+                        type:'GET',
+                        success: function(data){
+                            console.log(data)
+                        }
+                    }).done(function(){
+                        setTimeout(function(){
+                            $(".spinner-border").fadeOut(500);
+                        }, 700);
+                    });
+                });
+            });
+        </script>
+    </body>
+    <script src="{% static 'scripts/charts.js' %}"></script>
+</html>
