@@ -267,13 +267,11 @@ def trading_strategy(fast=12,slow=26,signal=9,buy_percentage=5.0,sell_percentage
         if env.positive_balance:
             if data['trend'].iloc[i] == "DARK_RED": #buy signal
                 env.buy(data['open'].iloc[i], data['time'].iloc[i])
-                # df.loc[i,'balance']= env.balance_amount
                 data.loc[i,'buysell']= "buy"
 
             if all_in_strategy:
                 if i > 1 and data['trend'].iloc[i] == "RED" and data['trend'].iloc[i-1] == "DARK_RED" and data['trend'].iloc[i-2] == "DARK_RED":
                     env.buy_all(data['open'].iloc[i], data['time'].iloc[i])
-                    # df.loc[i,'balance']=env.balance_amount
                     data.loc[i,'buysell']="buy_all"
             
             data.loc[i,'balance'] = env.balance_amount
@@ -283,13 +281,11 @@ def trading_strategy(fast=12,slow=26,signal=9,buy_percentage=5.0,sell_percentage
         if env.in_position:
             if data['trend'].iloc[i] == "DARK_GREEN": #sell signal
                 env.sell(data['close'].iloc[i], data['time'].iloc[i])
-                # df.loc[i,'balance'] = env.balance_amount
                 data.loc[i,'buysell'] = "sell"
             
             if all_in_strategy:
                 if i > 0 and data['trend'].iloc[i] == "GREEN" and data['trend'].iloc[i-1] == "DARK_GREEN" and data['trend'].iloc[i-2] == "DARK_GREEN":
                     env.sell_all(data['close'].iloc[i], data['time'].iloc[i])
-                    # df.loc[i,'balance'] = env.balance_amount
                     data.loc[i,'buysell']="sell_all"
  
             data.loc[i,'balance'] = env.balance_amount
@@ -305,10 +301,7 @@ def trading_strategy(fast=12,slow=26,signal=9,buy_percentage=5.0,sell_percentage
     data['coin_balance']=np.round(data['close']*data['coin_qty'],2)
     data['total_portfolio_value']=data['coin_balance']+data['balance']
 
-    # download_data=df[['time','balance','coin_qty','coin_balance','total_portfolio_value']]
-
-    # print(download_data)
-
+    # estimating performance metrics
     final_balance =round(data.loc[len(data)-1,'total_portfolio_value'],2)
     final_profit= final_balance-env.starting_balance
     profit_percentage= round(final_profit*100/env.starting_balance,2)
@@ -319,9 +312,7 @@ def trading_strategy(fast=12,slow=26,signal=9,buy_percentage=5.0,sell_percentage
     bnh_profit=balance_after_selling_at_end - env.starting_balance
     bnh_percentage = (bnh_profit*100) / env.starting_balance
 
-    # saving the analysis to data folder for later use by other apis
-    # data.to_csv(file)
-
+    # data returned from this function
     result['final_balance']= round(data.loc[len(data)-1,'total_portfolio_value'],2)
     result['profit'] = round(final_profit,2)
     result['profit_percent'] = round(profit_percentage,2)
@@ -363,7 +354,7 @@ def download_file(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns=['Time_UTC','Time_EST','MACD_Color','Buy_Or_Sell','USD_balance','Coin_Quantity','Coin_Value_USD','Total_Portfolio_value']
+    columns=['Time_UTC','Time_EST','MACD_Color','Buy_Or_Sell','USD_balance','Coin_Quantity','Coin_Value_USD','Total_Portfolio_value','Transaction_value']
     row_num=0
     for i in range(len(columns)):
         ws.write(row_num,i,columns[i],font_style)
@@ -383,10 +374,11 @@ def download_file(request):
         ws.write(i-offset+1, 1, est_time, font_style)
         ws.write(i-offset+1, 2, trend, font_style)
         ws.write(i-offset+1, 3, download_data['buysell'].iloc[i-1], font_style)
-        ws.write(i-offset+1, 4, download_data['balance'].iloc[i-1], font_style)
-        ws.write(i-offset+1, 5, download_data['coin_qty'].iloc[i-1], font_style)
-        ws.write(i-offset+1, 6, download_data['coin_balance'].iloc[i-1], font_style)
-        ws.write(i-offset+1, 7, download_data['total_portfolio_value'].iloc[i-1], font_style)
+        ws.write(i-offset+1, 4, np.round(download_data['balance'].iloc[i-1],2), font_style)
+        ws.write(i-offset+1, 5, np.round(download_data['coin_qty'].iloc[i-1],2), font_style)
+        ws.write(i-offset+1, 6, np.round(download_data['coin_balance'].iloc[i-1],2), font_style)
+        ws.write(i-offset+1, 7, np.round(download_data['total_portfolio_value'].iloc[i-1],2), font_style)
+        ws.write(i-offset+1, 8, np.round(download_data['balance'].iloc[i-1]-download_data['balance'].iloc[i-2],2),font_style)
 
     wb.save(response)
 
