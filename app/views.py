@@ -3,6 +3,7 @@ from django.http import JsonResponse,HttpResponse
 from app import config
 from binance.client import Client
 from datetime import datetime as dt
+import glob
 import time
 import pytz
 import xlwt
@@ -185,8 +186,6 @@ def index(request):
         else:
             content['memory_exceeded_limit']=False
 
-            # setting the name of using selected parameters
-            name = symbol+'_'+start+'_to_'+end+'_'+interval
             # fetching data from binance and storing in the global data dataframe
             data,status=get_data(symbol,interval,start,end)
 
@@ -203,7 +202,9 @@ def index(request):
                 content['interval']=interval
                 content['start_date']=start
                 content['end_date']=end
-
+            
+            # setting the name of using selected parameters
+            name = coin+'_'+start+'_to_'+end+'_'+interval+'_'+str(content['buy_percent'])+'_'+str(content['sell_percent'])
 
     return render(request,"index.html",context=content)
 
@@ -333,33 +334,34 @@ def download_file(request):
     global data
     global name
 
-    # # getting the analysis data from the data folder
-    # file=glob.glob(f'{csv_dir}*.csv')[0]
+    print(name)
     # setting respose type to be excel
     response = HttpResponse(content_type='application/ms-excel')
-    # # setting file name and type as attachment
-    # excel_name=file.split(".")[0]
-    # excel_name=excel_name[9:]
+    # setting file name and type as attachment
     response['Content-Disposition'] = f'attachment; filename="{name}.xls" '
-
     # reading raw data
     raw_data=data
     # creating a new dataframe with only essential data
     download_data=raw_data[['time','trend','buysell','balance','coin_qty','coin_balance','total_portfolio_value']]
     # creating a excel workbook
     wb=xlwt.Workbook()
-    # adding sheet to workbook
+    # adding sheets to workbook
     ws=wb.add_sheet("Simulation Results")
-    # setting font styleherok
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+    ws1=wb.add_sheet("Selected Parameters")
 
-    columns=['Time_UTC','Time_EST','MACD_Color','Buy_Or_Sell','USD_balance','Coin_Quantity','Coin_Value_USD','Total_Portfolio_value','Transaction_value']
+    # adding transaction data to worksheet
+    # setting font styleherok
+    font_style_header = xlwt.XFStyle()
+    font_style_header.font.bold = True
+
+    columns=['Time_UTC','Time_EST/EDT','MACD_Color','Transaction_USD','Balance_USD','Coin_Quantity','Coin_Value_USD','Total_Portfolio_value']
     row_num=0
     for i in range(len(columns)):
-        ws.write(row_num,i,columns[i],font_style)
+        ws.write(row_num,i,columns[i],font_style_header)
 
-    font_style.font.bold = False
+    font_style_rows = xlwt.XFStyle()
+    font_style_rows.font.bold = False
+
     offset=34
     for i in range(offset,len(download_data)+1):
         # converting timestamp to string format for readability
@@ -370,15 +372,39 @@ def download_file(request):
         else:
             trend=download_data['trend'].iloc[i-1]
 
-        ws.write(i-offset+1, 0, utc_time, font_style)
-        ws.write(i-offset+1, 1, est_time, font_style)
-        ws.write(i-offset+1, 2, trend, font_style)
-        ws.write(i-offset+1, 3, download_data['buysell'].iloc[i-1], font_style)
-        ws.write(i-offset+1, 4, np.round(download_data['balance'].iloc[i-1],2), font_style)
-        ws.write(i-offset+1, 5, np.round(download_data['coin_qty'].iloc[i-1],2), font_style)
-        ws.write(i-offset+1, 6, np.round(download_data['coin_balance'].iloc[i-1],2), font_style)
-        ws.write(i-offset+1, 7, np.round(download_data['total_portfolio_value'].iloc[i-1],2), font_style)
-        ws.write(i-offset+1, 8, np.round(download_data['balance'].iloc[i-1]-download_data['balance'].iloc[i-2],2),font_style)
+        transaction=np.round(download_data['balance'].iloc[i-1]-download_data['balance'].iloc[i-2],2)
+        if transaction < 0.0:
+            transaction_value = "USD "+str(-transaction)+" BUY"
+        elif transaction > 0.0:
+            transaction_value = "USD "+str(transaction)+" SELL"
+        else:
+            transaction_value = "No Transaction"
+
+        ws.write(i-offset+1, 0, utc_time, font_style_rows)
+        ws.write(i-offset+1, 1, est_time, font_style_rows)
+        ws.write(i-offset+1, 2, trend, font_style_rows)
+        ws.write(i-offset+1, 3, transaction_value,font_style_rows)
+        ws.write(i-offset+1, 4, np.round(download_data['balance'].iloc[i-1],2), font_style_rows)
+        ws.write(i-offset+1, 5, np.round(download_data['coin_qty'].iloc[i-1],2), font_style_rows)
+        ws.write(i-offset+1, 6, np.round(download_data['coin_balance'].iloc[i-1],2), font_style_rows)
+        ws.write(i-offset+1, 7, np.round(download_data['total_portfolio_value'].iloc[i-1],2), font_style_rows)
+
+    # adding parameter data to second worksheet
+    columns_ws1=['Parameter','Value']
+    row_num=0
+    for i in range(len(columns_ws1)):
+        ws1.write(row_num,i,columns_ws1[i],font_style_header)
+
+    values=name.split("_")
+    params=['Coin','Start Date',' ','End Date','Interval','Buy %','Sell %']
+
+    for i in range(len(values)-1):
+        if i<2:
+            ws1.write(i+1,0,params[i],font_style_header)
+            ws1.write(i+1,1,values[i],font_style_rows)
+        else:
+            ws1.write(i+1,0,params[i+1],font_style_header)
+            ws1.write(i+1,1,values[i+1],font_style_rows)
 
     wb.save(response)
 
