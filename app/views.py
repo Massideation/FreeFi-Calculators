@@ -208,6 +208,13 @@ def index(request):
 
     return render(request,"index.html",context=content)
 
+# view for wealth building table page
+def wealth_building(request):
+    
+    content={}
+
+    return render(request,"wealth_building.html",context=content)
+
 # api endpoint for gettign data for plotting
 def fetch_data(request):
 
