@@ -210,9 +210,132 @@ def index(request):
 
 # view for wealth building table page
 def wealth_building(request):
-    
-    content={}
 
+    content={
+            'result' :False,
+            'years' : [1,2,3,4,5,6,7,8,9,10],
+            'income' : [0,0,0,0,0,0,0,0,0,0],
+            'exoense' :[0,0,0,0,0,0,0,0,0,0],
+            'asset': [0,0,0,0,0,0,0,0,0,0],
+            'usdc': [0,0,0,0,0,0,0,0,0,0],
+            'usdc_interest' : [0,0,0,0,0,0,0,0,0,0],
+            'asset_growth' : [0,0,0,0,0,0,0,0,0,0],
+            'total_colleteral' : [0,0,0,0,0,0,0,0,0,0],
+            'loan_interest': [0,0,0,0,0,0,0,0,0,0],
+            'net_colleteral' : [0,0,0,0,0,0,0,0,0,0],
+            'invest_whats_left' : [0,0,0,0,0,0,0,0,0,0],
+            'FFM' : [0,0,0,0,0,0,0,0,0,0],
+            'inv_diff_months' : [0,0,0,0,0,0,0,0,0,0],
+        }
+
+    if request.method == 'POST':
+
+        input = request.POST
+        income = float(input['income'])*12
+        expense=float(input['expense'])*12
+        asset_percent= float(input['asset_percent'])
+        num_yrs = int(input['numyears'])
+        usdc_interest= float(input['USDC_interest'])
+        loan_interest= float(input['Loan_interest'])
+        asset_gain= float(input['Asset_gain'])
+
+        asset = income*asset_percent/100
+        
+        cash = income*(100-asset_percent)/100
+        
+        cash_plus_interest = cash + (cash * usdc_interest/100)
+        
+        asset_plus_growth = asset + (asset * asset_gain/100)
+
+        loan_plus_interest = expense + (expense * loan_interest/100)
+
+        total_collateral = cash_plus_interest + asset_plus_growth
+
+        net_collatteral = total_collateral - loan_plus_interest
+
+        invest_whats_left = income-expense
+
+        FFM = np.round(net_collatteral*12/expense,2)
+
+        inv_diff_months= np.round(invest_whats_left*12/expense,2)
+
+        years =[1,]
+        income_list = [income]
+        expense_list = [expense]
+        assets_list = [asset,]
+        cash_list = [cash,]
+        cash_plus_interest_list = [cash_plus_interest,]
+        asset_growth_list =[asset_plus_growth,]
+        collateral_list = [total_collateral,]
+        loan_interest_list=[loan_plus_interest,]
+        net_collateral_list = [net_collatteral,]
+        invest_whats_left_list = [invest_whats_left,]
+        FFM_list = [FFM,]
+        inv_diff_months_list= [inv_diff_months,]
+
+
+
+        for i in range(1,num_yrs):
+          
+            years.append(i+1)
+
+            income_list.append(income*(i+1))
+
+            expense_list.append(expense*(i+1))
+
+            asset = income*asset_percent/100
+
+            assets_list.append(asset)
+
+            cash = cash_list[i-1] + income*(100-asset_percent)/100
+            cash_list.append(cash)
+
+            cash_plus_interest = (cash_plus_interest_list[i-1] + asset) * (1+(usdc_interest/100))
+            cash_plus_interest_list.append(cash_plus_interest)
+
+            asset_plus_growth = (asset_growth_list[i-1] +  asset) * (1+(asset_gain/100))
+            asset_growth_list.append(asset_plus_growth)
+
+            loan_plus_interest = (loan_interest_list[i-1] + expense)*(1+(loan_interest/100))
+            loan_interest_list.append(loan_plus_interest)
+
+            total_collateral = cash_plus_interest + asset_plus_growth
+            collateral_list.append(total_collateral)
+
+            net_collateral = total_collateral - loan_plus_interest
+            net_collateral_list.append(net_collateral)
+
+            invest_whats_left = (invest_whats_left_list[i-1] + (income-expense))*(1+(asset_gain/100))
+            invest_whats_left_list.append(invest_whats_left)
+
+            FFM = net_collateral_list[i]*12/expense
+            FFM_list.append(np.round(FFM,2))
+
+            inv_diff_months= invest_whats_left_list[i]*12/expense
+            inv_diff_months_list.append(np.round(inv_diff_months,2))
+
+        parameter_list = ['Monthly Income','Monthly Expenses','Asset Allocation %','Investment Years','USDC Interest %','Loan Interest %','Asset Gain %(CAGR)']
+        selected_list = [income/12,expense/12,asset_percent,num_yrs,usdc_interest,loan_interest,asset_gain]
+        
+        content={
+            'result' :True,
+            'years' : years,
+            'income' : income_list,
+            'expense' : expense_list,
+            'asset': assets_list,
+            'usdc': cash_list,
+            'usdc_interest' : cash_plus_interest_list,
+            'asset_growth' : asset_growth_list,
+            'total_colleteral' : collateral_list,
+            'loan_interest': loan_interest_list,
+            'net_colleteral' : net_collateral_list,
+            'invest_whats_left' : invest_whats_left_list,
+            'FFM' : FFM_list,
+            'inv_diff_months' : inv_diff_months_list,
+            'parameters' : parameter_list,
+            'selected_params' : selected_list,
+        }
+        
     return render(request,"wealth_building.html",context=content)
 
 # api endpoint for gettign data for plotting

@@ -12,32 +12,252 @@
         <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <!-- <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg> -->
+              <h4>Crypto MassIdeation</h4>
+            </a>
+    
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <!-- <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+              <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+              <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+              <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+              <li><a href="#" class="nav-link px-2 text-white">About</a></li> -->
+            </ul>
+    
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+              <!-- <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search"> -->
+            </form>
+    
+            <div class="text-end">
+              <!-- <button type="button" class="btn btn-outline-light me-2">Login</button>
+              <button type="button" class="btn btn-warning">Sign-up</button> -->
+              <a href="{% url 'index'%}"><button type="button" class="btn btn-outline-light me-2">Home</button></a>
+            </div>
+          </div>
+        </div>
+      </header>
     <div class="container-fluid  row">
-        <form class="input_area col-md-4 mt-5" action="/" method="POST">
+        <form class="input_area col-md-3 mt-5" action="{% url 'wealth_building'%}" method="POST">
             {% csrf_token %}
             <!-- User Inputs go here -->
             <h4>Enter Input Parameters Here</h4>
             <div class="col-12">
-                <label for="income" class="form-label"><span class="income">Income / Deposits</span></label>
-                <input type="text" class="form-control" id="income" name="income" placeholder="Ex: 5.0">
+                <label for="income" class="form-label"><span class="income">Income / Deposits (US$)</span></label>
+                <input type="text" class="form-control" id="income" name="income" placeholder="5000">
             </div>
-            <div class="col-12 mt-3">
-                <label for="expense" class="form-label"><span class="expense">Bills / Loans</span></label>
-                <input type="text" class="form-control" id="expense" name="expense" placeholder="Ex: 5.0">
+            <div class="col-12 mt-2">
+                <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$)</span></label>
+                <input type="text" class="form-control" id="expense" name="expense" placeholder="4000">
             </div>
             <div class="slideContainer">
                 <label for="asset_percent" class="form-label"><span class="">Assets Purchased as <strong> % </strong>of monthly Income</span></label>
-                <input type="range" min="0" max="100" step="1" id="slider" name="asset_percent">
-                <p>Value: <span id="value"> </span></p>
+                <input type="range" min="20" max="80" step="1" id="slider" name="asset_percent" >
+                <p>Value: <span id="value"> </span>%</p>
             </div>
+            <div class="col-12 mt-2">
+                <label for="numyears" class="form-label"><span class="">Num. Of Invested Yrs</span></label>
+                <input type="text" class="form-control" id="numyears" name="numyears" placeholder="10">
+            </div>
+            <hr class="dashed">
+            <h4>Enter Interest details Here</h4>
+            <div class="col-12 mt-2">
+                <label for="USDC_interest" class="form-label"><span class="income">USDC Interest (%)</span></label>
+                <input type="text" class="form-control" id="USDC_interest" name="USDC_interest" placeholder="2.0">
+            </div>
+            <div class="col-12 mt-2">
+                <label for="Loan_interest" class="form-label"><span class="expense">Loan Interest (%)</span></label>
+                <input type="text" class="form-control" id="Loan_interest" name="Loan_interest" placeholder="5.0">
+            </div>
+            <div class="col-12 mt-2">
+                <label for="Asset_gain" class="form-label"><span class="income">Asset Gain (%)</span></label>
+                <input type="text" class="form-control" id="Asset_gain" name="Asset_gain" placeholder="20.0">
+            </div>
+
+            <hr class="solid">
+            <div>
+                <button type="submit" class="btn btn-primary text-dark col-12">Submit & Analyse</button>
+            </div>
+
         </form>
-        <div class="output_area col-8 mt-5">
+        <div class="output_area col-md-9 mt-5">
             <!-- Output table goes here -->
-            <h4>Analysis Table</h4>
-            <div class="col-12">
-                <label for="inputBuyPercent" class="form-label">Buy Percent</label>
-                <input type="text" class="form-control" id="inputBuyPercent" name="buyPercent" placeholder="Ex: 5.0">
+            <h4 class="container-fluid">Analysis Table</h4>
+            {% if result %}
+            <div class="outer-wrapper">
+                <table class="table-wrapper">
+                    <thead>
+                        <th scope="col">#</th>
+                        {% for k in years %}
+                        <th scope="col"> Year {{k}} </th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                      <tr>
+                            <th scope="row">Income</th>
+                            {% for k in income %}
+                            <td id="money" style="color: green;">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Expense</th>
+                            {% for k in expense %}
+                            <td id="money" style="color: rgb(231, 16, 70);">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Asset Purchased</th>
+                            {% for k in asset %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">USDC</th>
+                            {% for k in usdc %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">USDC + Interest</th>
+                            {% for k in usdc_interest %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Asset Value + Growth</th>
+                            {% for k in asset_growth %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Total Colleteral</th>
+                            {% for k in total_colleteral %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Loan + Interest</th>
+                            {% for k in loan_interest %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Net Colleteral</th>
+                            {% for k in net_colleteral %}
+                            <td id="money" style="color: green;">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Invest Whats Left</th>
+                            {% for k in invest_whats_left %}
+                            <td id="money" style="color: rgb(61, 41, 148);">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">FFM Months of Expense</th>
+                            {% for k in FFM %}
+                            <td>{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">invest whats left Months</th>
+                            {% for k in inv_diff_months %}
+                            <td>{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                    <tbody>
+                 </table>
             </div>
+            <h4 class="container-fluid">Selected Options</h4>
+            <div class="d-grid container-fluid" style="grid-template-columns: 2fr 1fr 9fr;">
+                <div class="g-1">
+                    {% for param in parameters %}
+                    <div class="custom_border"><strong>{{param}}</strong></div>
+                    {% endfor %}
+                </div>
+                <div class="g-1">
+                    {% for value in selected_params %}
+                    <div class="custom_border text-end"><strong>{{value}}</strong></div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="outer-wrapper">
+                <table class="table-wrapper">
+                    <thead>
+                        <th scope="col">#</th>
+                        {% for k in years %}
+                        <th scope="col"> Year {{k}} </th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                      <tr>
+                            <th scope="row">Asset Purchased</th>
+                            {% for k in asset %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">USDC</th>
+                            {% for k in usdc %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">USDC + Interest</th>
+                            {% for k in usdc_interest %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Asset Value + Growth</th>
+                            {% for k in asset_growth %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Total Colleteral</th>
+                            {% for k in total_colleteral %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Loan + Interest</th>
+                            {% for k in loan_interest %}
+                            <td id="money">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Net Colleteral</th>
+                            {% for k in net_colleteral %}
+                            <td id="money" style="color: green;">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">Invest Whats Left</th>
+                            {% for k in invest_whats_left %}
+                            <td id="money" style="color: brown;">{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">FFM Months of Expense</th>
+                            {% for k in FFM %}
+                            <td>{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                      <tr>
+                            <th scope="row">invest whats left Months</th>
+                            {% for k in inv_diff_months %}
+                            <td>{{k}}</td>
+                            {% endfor %}
+                      </tr>
+                    <tbody>
+                 </table>
+            </div>
+            {% endif %}
         </div>  
     </div>
     <script src="{% static 'scripts/style.js' %}"></script>
