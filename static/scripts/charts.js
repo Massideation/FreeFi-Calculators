@@ -33,20 +33,7 @@ var candleSeries = chart.addCandlestickSeries({
 });
 
 
-fetch('https://cryptomassideation.herokuapp.com/fetch_data')
-    .then((r)=>r.json())
-    .then((response)=>{
-
-		console.log(response)
-
-		candleSeries.setData(response['candlesticks'])
-
-		candleSeries.setMarkers(response['buysell']);
-		
-    })
-
-
-// fetch('http://127.0.0.1:8000/fetch_data')
+// fetch('https://cryptomassideation.herokuapp.com/fetch_data')
 //     .then((r)=>r.json())
 //     .then((response)=>{
 
@@ -57,5 +44,18 @@ fetch('https://cryptomassideation.herokuapp.com/fetch_data')
 // 		candleSeries.setMarkers(response['buysell']);
 		
 //     })
+
+
+fetch('http://0.0.0.0:5000/fetch_data')
+    .then((r)=>r.json())
+    .then((response)=>{
+
+		console.log(response)
+
+		candleSeries.setData(response['candlesticks'])
+
+		candleSeries.setMarkers(response['buysell']);
+		
+    })
 
 

@@ -328,7 +328,7 @@ def trading_strategy(fast=12,slow=26,signal=9,buy_percentage=5.0,sell_percentage
 
     return result
 
-# Download excel file
+# api end point for Downloading excel file
 def download_file(request):
 
     global data
