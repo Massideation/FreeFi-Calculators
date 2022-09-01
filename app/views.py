@@ -231,13 +231,13 @@ def wealth_building(request):
     if request.method == 'POST':
 
         input = request.POST
-        income = float(input['income'])*12
-        expense=float(input['expense'])*12
+        income = float(input['income'].replace(",",""))*12
+        expense=float(input['expense'].replace(",",""))*12
         asset_percent= float(input['asset_percent'])
-        num_yrs = int(input['numyears'])
-        usdc_interest= float(input['USDC_interest'])
-        loan_interest= float(input['Loan_interest'])
-        asset_gain= float(input['Asset_gain'])
+        num_yrs = int(float(input['numyears'].replace(",",".")))
+        usdc_interest= float(input['USDC_interest'].replace(",","."))
+        loan_interest= float(input['Loan_interest'].replace(",","."))
+        asset_gain= float(input['Asset_gain'].replace(",","."))
 
         asset = income*asset_percent/100
         
