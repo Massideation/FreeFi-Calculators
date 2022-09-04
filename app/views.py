@@ -255,9 +255,9 @@ def wealth_building(request):
 
         invest_whats_left = income-expense
 
-        FFM = np.round(net_collatteral*12/expense,2)
+        FFM = np.round(net_collatteral/expense,2)
 
-        inv_diff_months= np.round(invest_whats_left*12/expense,2)
+        inv_diff_months= np.round(invest_whats_left/expense,2)
 
         years =[1,]
         income_list = [income]
