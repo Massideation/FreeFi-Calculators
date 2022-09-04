@@ -52,9 +52,11 @@
             <div class="col-12 mt-2">
                 <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$)</span></label>
                 <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="4250">
-                <div class="invalid-tooltip">
-                  Please choose a unique and valid username.
+                {% if expense_more_than_income %}
+                <div class="alert alert-danger" role="alert">
+                  Expense should not exceed 85% of Income!
                 </div>
+                {% endif %}
             </div>
             <div class="slideContainer">
                 <label for="asset_percent" class="form-label"><span class="">Assets Purchased as <strong> % </strong>of monthly Income</span></label>
