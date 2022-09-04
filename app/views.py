@@ -324,7 +324,7 @@ def wealth_building(request):
             cash = cash_list[i-1] + income*(100-asset_percent)/100
             cash_list.append(cash)
 
-            cash_plus_interest = (cash_plus_interest_list[i-1] + cash) * (1+(usdc_interest/100))
+            cash_plus_interest = (cash_plus_interest_list[i-1] + income*(100-asset_percent)/100) * (1+(usdc_interest/100))
             cash_plus_interest_list.append(cash_plus_interest)
 
             asset_plus_growth = (asset_growth_list[i-1] +  asset) * (1+(asset_gain/100))
