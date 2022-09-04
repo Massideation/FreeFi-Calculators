@@ -33,7 +33,6 @@ p span{
 }
 
 #slider::after{
-    content: '100';
     color: black;
     font-size: 1.1rem;
     position: absolute;
@@ -41,7 +40,6 @@ p span{
 }
 
 #slider::before{
-    content: '0';
     color: black;
     font-size: 1.1rem;
     position: absolute;
