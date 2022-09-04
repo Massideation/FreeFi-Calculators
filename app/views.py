@@ -231,33 +231,47 @@ def wealth_building(request):
     if request.method == 'POST':
 
         input = request.POST
+        # income
         if input['income'] == "":
             income = 5000*12
         else:
             income = float(input['income'].replace(",",""))*12
-
+        # expense
         if input['expense'] == "":
             expense = 4250*12
         else:
             expense=float(input['expense'].replace(",",""))*12
+            
+            if expense > 0.85*income:
+                
+                content['expense_more_than_income'] = True
 
+                return render(request,"wealth_building.html",context=content)
+                
+        # asset_percent
         asset_percent= float(input['asset_percent'])
+        
+        # numyears
         if input['numyears']== "":
             num_yrs=20
         else:
             num_yrs = int(float(input['numyears'].replace(",",".")))
+        # usdc_interest
         if input['USDC_interest'] == "":
             usdc_interest = 0.3
         else:
             usdc_interest= float(input['USDC_interest'].replace(",","."))
+        # loan Interest
         if input['Loan_interest'] == "":
             loan_interest=3.0
         else:
             loan_interest= float(input['Loan_interest'].replace(",","."))
+        # asset gain
         if input['Asset_gain'] == "":
             asset_gain=20.0
         else:
             asset_gain= float(input['Asset_gain'].replace(",","."))
+
 
         asset = income*asset_percent/100
         
