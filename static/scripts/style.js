@@ -8,7 +8,7 @@ slider.oninput = function() {
 }
 
 slider.addEventListener("mousemove",function(){
-    var x = (this.value-20)*100/(80-20);
+    var x = (this.value-5)*100/(20-5);
     var color = 'linear-gradient(90deg, lightgreen '+ x + '%, white ' + x + '%)';
     slider.style.background=color
 })
