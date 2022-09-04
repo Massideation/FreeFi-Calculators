@@ -308,10 +308,10 @@ def wealth_building(request):
             invest_whats_left = (invest_whats_left_list[i-1] + (income-expense))*(1+(asset_gain/100))
             invest_whats_left_list.append(invest_whats_left)
 
-            FFM = net_collateral_list[i]*12/expense
+            FFM = net_collateral_list[i]/expense
             FFM_list.append(np.round(FFM,2))
 
-            inv_diff_months= invest_whats_left_list[i]*12/expense
+            inv_diff_months= invest_whats_left_list[i]/expense
             inv_diff_months_list.append(np.round(inv_diff_months,2))
 
         parameter_list = ['Monthly Income','Monthly Expenses','Asset Allocation %','Investment Years','USDC Interest %','Loan Interest %','Asset Gain %(CAGR)']
