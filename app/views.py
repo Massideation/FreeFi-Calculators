@@ -350,7 +350,15 @@ def wealth_building(request):
 
         parameter_list = ['Monthly Income','Monthly Expenses','Asset Allocation %','Investment Years','USDC Interest %','Loan Interest %','Asset Gain %(CAGR)']
         selected_list = [income/12,expense/12,asset_percent,num_yrs,usdc_interest,loan_interest,asset_gain]
-        
+        selected_values = {
+            'Monthly Income':income/12,
+            'Monthly Expenses':expense/12,
+            'Asset Allocation %': asset_percent,
+            'Investment Years' :num_yrs,
+            'USDC Interest %' :usdc_interest,
+            'Loan Interest %' :loan_interest,
+            'Asset Gain %(CAGR)':asset_gain,
+        }
         content={
             'result' :True,
             'years' : years,
@@ -366,8 +374,9 @@ def wealth_building(request):
             'invest_whats_left' : invest_whats_left_list,
             'FFM' : FFM_list,
             'inv_diff_months' : inv_diff_months_list,
-            'parameters' : parameter_list,
-            'selected_params' : selected_list,
+            # 'parameters' : parameter_list,
+            # 'selected_params' : selected_list,
+            'selected_values' :selected_values,
         }
         
     return render(request,"wealth_building.html",context=content)

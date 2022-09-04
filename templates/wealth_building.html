@@ -177,7 +177,7 @@
                  </table>
             </div>
             <h4 class="container-fluid">Selected Options</h4>
-            <div class="d-grid container-fluid" style="grid-template-columns: 2fr 1fr 9fr;">
+            <!-- <div class="d-grid container-fluid" style="grid-template-columns: 2fr 1fr 9fr;">
                 <div class="g-1">
                     {% for param in parameters %}
                     <div class="custom_border"><strong>{{param}}</strong></div>
@@ -188,7 +188,21 @@
                     <div class="custom_border text-end"><strong>{{value}}</strong></div>
                     {% endfor %}
                 </div>
-            </div>
+            </div> -->
+            <table>
+                  <thead>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                  </thead>
+                  <tbody>
+                        {% for key,values in selected_values.items %}
+                        <tr>
+                              <th scope="row">{{key}}</th>
+                              <td>{{value}}</td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+            </table>
             {% else %}
             <div class="outer-wrapper">
                 <table class="table-wrapper">
