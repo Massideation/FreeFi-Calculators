@@ -47,11 +47,14 @@
             <h4>Enter Input Parameters Here</h4>
             <div class="col-12">
                 <label for="income" class="form-label"><span class="income">Income / Deposits (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" placeholder="5000" required>
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" placeholder="5000">
             </div>
             <div class="col-12 mt-2">
                 <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="4000" required>
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="4250">
+                <div class="invalid-tooltip">
+                  Please choose a unique and valid username.
+                </div>
             </div>
             <div class="slideContainer">
                 <label for="asset_percent" class="form-label"><span class="">Assets Purchased as <strong> % </strong>of monthly Income</span></label>
@@ -60,21 +63,21 @@
             </div>
             <div class="col-12 mt-2">
                 <label for="numyears" class="form-label"><span class="">Num. Of Invested Yrs</span></label>
-                <input type="text" pattern="\d+([.,]\d+)*" class="form-control" id="numyears" name="numyears" placeholder="10" required>
+                <input type="text" pattern="\d+([.,]\d+)*" class="form-control" id="numyears" name="numyears" placeholder="20">
             </div>
             <hr class="dashed">
             <h4>Enter Interest details Here</h4>
             <div class="col-12 mt-2">
                 <label for="USDC_interest" class="form-label"><span class="income">USDC Interest (%)</span></label>
-                <input type="text" pattern="\d*([.,]\d+)*"  class="form-control" id="USDC_interest" name="USDC_interest" placeholder="2.0" required>
+                <input type="text" pattern="\d*([.,]\d+)*"  class="form-control" id="USDC_interest" name="USDC_interest" placeholder="0.3">
             </div>
             <div class="col-12 mt-2">
                 <label for="Loan_interest" class="form-label"><span class="expense">Loan Interest (%)</span></label>
-                <input type="text" pattern="\d*([.,]\d+)*" class="form-control" id="Loan_interest" name="Loan_interest" placeholder="5.0" required>
+                <input type="text" pattern="\d*([.,]\d+)*" class="form-control" id="Loan_interest" name="Loan_interest" placeholder="3.0">
             </div>
             <div class="col-12 mt-2">
                 <label for="Asset_gain" class="form-label"><span class="income">Asset Gain (%)</span></label>
-                <input type="text" pattern="\d*([.,]\d+)*" class="form-control" id="Asset_gain" name="Asset_gain" placeholder="20.0" required>
+                <input type="text" pattern="\d*([.,]\d+)*" class="form-control" id="Asset_gain" name="Asset_gain" placeholder="20.0">
             </div>
 
             <hr class="solid">

@@ -231,13 +231,33 @@ def wealth_building(request):
     if request.method == 'POST':
 
         input = request.POST
-        income = float(input['income'].replace(",",""))*12
-        expense=float(input['expense'].replace(",",""))*12
+        if input['income'] == "":
+            income = 5000*12
+        else:
+            income = float(input['income'].replace(",",""))*12
+
+        if input['expense'] == "":
+            expense = 4250*12
+        else:
+            expense=float(input['expense'].replace(",",""))*12
+
         asset_percent= float(input['asset_percent'])
-        num_yrs = int(float(input['numyears'].replace(",",".")))
-        usdc_interest= float(input['USDC_interest'].replace(",","."))
-        loan_interest= float(input['Loan_interest'].replace(",","."))
-        asset_gain= float(input['Asset_gain'].replace(",","."))
+        if input['numyears']== "":
+            num_yrs=20
+        else:
+            num_yrs = int(float(input['numyears'].replace(",",".")))
+        if input['USDC_interest'] == "":
+            usdc_interest = 0.3
+        else:
+            usdc_interest= float(input['USDC_interest'].replace(",","."))
+        if input['Loan_interest'] == "":
+            loan_interest=3.0
+        else:
+            loan_interest= float(input['Loan_interest'].replace(",","."))
+        if input['Asset_gain'] == "":
+            asset_gain=20.0
+        else:
+            asset_gain= float(input['Asset_gain'].replace(",","."))
 
         asset = income*asset_percent/100
         
