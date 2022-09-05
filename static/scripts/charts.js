@@ -33,7 +33,7 @@ var candleSeries = chart.addCandlestickSeries({
 });
 
 
-fetch('https://cryptomassideation.herokuapp.com/crypto_analysis_api/fetch_data')
+fetch('https://cryptomassideation.herokuapp.com/fetch_data')
     .then((r)=>r.json())
     .then((response)=>{
 
