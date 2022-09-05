@@ -140,7 +140,10 @@ def trend(df):
 # Index view
 def index(request):
     
-    content = {"result" : False}
+    content = {
+            'result' : False,
+            'version' : "v 0.8.2",
+            }
 
     if request.method == 'POST':
         
@@ -212,6 +215,7 @@ def index(request):
 def wealth_building(request):
 
     content={
+            'version' : "v 0.8.2",
             'result' :False,
             'years' : [1,2,3,4,5,6,7,8,9,10],
             'income' : [0,0,0,0,0,0,0,0,0,0],
