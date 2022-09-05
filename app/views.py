@@ -363,6 +363,7 @@ def wealth_building(request):
         }
 
         content={
+            'version' : " v 0.8.2",
             'result' :True,
             'years' : years,
             'income' : income_list,
