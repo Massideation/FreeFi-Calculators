@@ -1,7 +1,9 @@
 var slider = document.getElementById("slider");
 var output = document.getElementById("value");
 
+slider.value = 55.0
 output.innerHTML = slider.value;
+
 
 slider.oninput = function() {
     output.innerHTML = this.value;
