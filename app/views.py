@@ -242,7 +242,7 @@ def wealth_building(request):
             income = float(input['income'].replace(",",""))*12
         # expense
         if input['expense'] == "":
-            expense = 4250*12
+            expense = 3500*12
         else:
             expense=float(input['expense'].replace(",",""))*12
             
@@ -352,8 +352,6 @@ def wealth_building(request):
             inv_diff_months= invest_whats_left_list[i]/expense
             inv_diff_months_list.append(np.round(inv_diff_months,2))
 
-        parameter_list = ['Monthly Income','Monthly Expenses','Asset Allocation %','Investment Years','USDC Interest %','Loan Interest %','Asset Gain %(CAGR)']
-        selected_list = [income/12,expense/12,asset_percent,num_yrs,usdc_interest,loan_interest,asset_gain]
         selected_values = {
             'Monthly Income':income/12,
             'Monthly Expenses':expense/12,
@@ -363,6 +361,7 @@ def wealth_building(request):
             'Loan Interest %' :loan_interest,
             'Asset Gain %(CAGR)':asset_gain,
         }
+
         content={
             'result' :True,
             'years' : years,
@@ -378,8 +377,6 @@ def wealth_building(request):
             'invest_whats_left' : invest_whats_left_list,
             'FFM' : FFM_list,
             'inv_diff_months' : inv_diff_months_list,
-            # 'parameters' : parameter_list,
-            # 'selected_params' : selected_list,
             'selected_values' :selected_values,
         }
         

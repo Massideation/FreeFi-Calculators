@@ -17,6 +17,8 @@
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
               <!-- <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg> -->
+              <img src="{% static 'logo/mi-logo-white.jpg' %}" width="80px" height="80px"/>
+
               <h4>Crypto MassIdeation</h4>
               <small>{{version}}</small>
             </a>
@@ -36,7 +38,7 @@
             <div class="text-end">
               <!-- <button type="button" class="btn btn-outline-light me-2">Login</button>
               <button type="button" class="btn btn-warning">Sign-up</button> -->
-              <a href="{% url 'index'%}"><button type="button" class="btn btn-outline-light me-2">Home</button></a>
+              <!-- <a href="{% url 'index'%}"><button type="button" class="btn btn-outline-light me-2">Home</button></a> -->
             </div>
           </div>
         </div>
@@ -52,7 +54,7 @@
             </div>
             <div class="col-12 mt-2">
                 <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="4250">
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="3500">
                 {% if expense_more_than_income %}
                 <div class="alert alert-danger" role="alert">
                   Expense should not exceed 85% of Income!
