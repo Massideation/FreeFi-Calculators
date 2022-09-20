@@ -47,11 +47,12 @@
             <h4>Enter Input Parameters Here</h4>
             <div class="col-12">
                 <label for="income" class="form-label"><span class="income">Income / Deposits (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" placeholder="7100">
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" value=7100 placeholder="7100">
             </div>
-            <div class="col-9 mt-2">
-                <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$) . <p><span id="expense_percent"> </span>% of Income</p></span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="5300">
+            <div class="col-12 mt-2">
+                <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$) .</label>
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" value=5300 placeholder="5300">
+                <p>Ratio: <span id="expense_percent"> </span>%</p></span>
                 {% if expense_more_than_income %}
                 <div class="alert alert-danger" role="alert">
                   Expense should not exceed 80% of Income!
@@ -71,7 +72,7 @@
                 <input type="text" pattern="\d+([.,]\d+)*" class="form-control" id="numyears" name="numyears" placeholder="20">
             </div>
             <hr class="dashed">
-            <h4>Enter Interest details Here</h4>
+            <h4>Assumptions</h4>
             <div class="col-12 mt-2">
                 <label for="USDC_interest" class="form-label"><span class="income">USDC Interest (%)</span></label>
                 <input type="text" pattern="\d*([.,]\d+)*"  class="form-control" id="USDC_interest" name="USDC_interest" placeholder="0.3">

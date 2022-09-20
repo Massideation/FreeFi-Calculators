@@ -3,12 +3,22 @@ const income =  document.querySelector("#income")
 const expense = document.querySelector("#expense")
 const expense_percent= document.querySelector('#expense_percent')
 
-expense_percent.innerHTML="";
 
-expense.addEventListener("change", function(){
-    expense_percent.innerHTML = Math.round(expense.value*100/income.value)
-})
-    
+var val = Math.round(expense.value*100/income.value);
+
+
+expense.onchange=function(){
+    val = Math.round(this.value*100/income.value);
+    expense_percent.innerHTML=val;
+}
+
+income.onchange=function(){
+    val = Math.round(expense.value*100/this.value);
+    expense_percent.innerHTML=val;
+}
+
+expense_percent.innerHTML=val;
+
 
 var slider = document.getElementById("slider");
 var output = document.getElementById("value");
