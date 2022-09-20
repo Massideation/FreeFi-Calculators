@@ -12,8 +12,9 @@ import pandas_ta as ta
 from app.Trading import TradingEnv
 import numpy as np
 
-# # for heroku
-# csv_dir = "/app/app/data/" 
+#app version
+
+app_version=" v 0.8.5"
 
 # for local
 csv_dir = "app/data/" 
@@ -142,7 +143,7 @@ def index(request):
     
     content = {
             'result' : False,
-            'version' : " v 0.8.2",
+            'version' : app_version,
             }
 
     if request.method == 'POST':
@@ -206,7 +207,7 @@ def index(request):
                 content['start_date']=start
                 content['end_date']=end
             
-            # setting the name of using selected parameters
+            # setting the name of file using selected parameters
             name = coin+'_'+start+'_to_'+end+'_'+interval+'_'+str(content['buy_percent'])+'_'+str(content['sell_percent'])
 
     return render(request,"index.html",context=content)
@@ -215,7 +216,7 @@ def index(request):
 def wealth_building(request):
 
     content={
-            'version' : " v 0.8.2",
+            'version' : app_version,
             'result' :False,
             'years' : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
             'income' : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -237,16 +238,16 @@ def wealth_building(request):
         input = request.POST
         # income
         if input['income'] == "":
-            income = 5000*12
+            income = 7100*12
         else:
             income = float(input['income'].replace(",",""))*12
         # expense
         if input['expense'] == "":
-            expense = 3500*12
+            expense = 5300*12
         else:
             expense=float(input['expense'].replace(",",""))*12
             
-            if expense > 0.85*income:
+            if expense > 0.8*income:
                 
                 content['expense_more_than_income'] = True
 
@@ -291,13 +292,15 @@ def wealth_building(request):
 
         net_collatteral = total_collateral - loan_plus_interest
 
-        invest_whats_left = income-expense
+        invest_whats_left = (income-expense)* (1+ asset_gain/100)
 
         FFM = np.round(net_collatteral/expense,2)
 
         inv_diff_months= np.round(invest_whats_left/expense,2)
 
         years =[1,]
+        monthly_income_list=[income/12,]
+        monthly_expense_list = [expense/12,]
         income_list = [income]
         expense_list = [expense]
         assets_list = [asset,]
@@ -316,6 +319,10 @@ def wealth_building(request):
         for i in range(1,num_yrs):
           
             years.append(i+1)
+
+            monthly_income_list.append(income/12)
+
+            monthly_expense_list.append(expense/12)
 
             income_list.append(income*(i+1))
 
@@ -366,6 +373,8 @@ def wealth_building(request):
             'version' : " v 0.8.2",
             'result' :True,
             'years' : years,
+            'monthly_income' : monthly_income_list,
+            'monthly_expense' : monthly_expense_list,
             'income' : income_list,
             'expense' : expense_list,
             'asset': assets_list,

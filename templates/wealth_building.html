@@ -13,7 +13,7 @@
 </head>
 <body>
     <header class="p-3 bg-dark text-white">
-        <div class="container">
+        <div class="">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
               <!-- <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg> -->
@@ -47,19 +47,22 @@
             <h4>Enter Input Parameters Here</h4>
             <div class="col-12">
                 <label for="income" class="form-label"><span class="income">Income / Deposits (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" placeholder="5000">
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*"class="form-control" id="income" name="income" placeholder="7100">
             </div>
-            <div class="col-12 mt-2">
-                <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$)</span></label>
-                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="3500">
+            <div class="col-9 mt-2">
+                <label for="expense" class="form-label"><span class="expense">Bills / Loans (US$) . <p><span id="expense_percent"> </span>% of Income</p></span></label>
+                <input type="text" pattern="\d+([,]\d{2}\d)*([.]\d+)*" class="form-control" id="expense" name="expense" placeholder="5300">
                 {% if expense_more_than_income %}
                 <div class="alert alert-danger" role="alert">
-                  Expense should not exceed 85% of Income!
+                  Expense should not exceed 80% of Income!
                 </div>
                 {% endif %}
             </div>
+            <div class="col-3">
+                 
+            </div>
             <div class="slideContainer">
-                <label for="asset_percent" class="form-label"><span class="">Assets Purchased as <strong> % </strong>of monthly Income</span></label>
+                <label for="asset_percent" class="form-label"><span class="">Crypto Purchased as <strong> % </strong>of monthly Income</span></label>
                 <input type="range" min="10" max="80" step="1" id="slider" name="asset_percent"  value="55">
                 <p>Value: <span id="value"> </span>%</p>
             </div>
@@ -101,7 +104,19 @@
                         {% endfor %}
                     </thead>
                     <tbody>
-                      <tr>
+                        <tr>
+                              <th scope="row">Monthly Income</th>
+                              {% for k in monthly_income %}
+                              <td id="money" style="color: green;">{{k}}</td>
+                              {% endfor %}
+                        </tr>
+                        <tr>
+                              <th scope="row">Monthly Expense</th>
+                              {% for k in monthly_expense %}
+                              <td id="money" style="color: rgb(231, 16, 70);">{{k}}</td>
+                              {% endfor %}
+                        </tr>
+                        <tr>
                             <th scope="row">Annual Income</th>
                             {% for k in income %}
                             <td id="money" style="color: green;">{{k}}</td>
