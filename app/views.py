@@ -370,7 +370,7 @@ def wealth_building(request):
         }
 
         content={
-            'version' : " v 0.8.2",
+            'version' : app_version,
             'result' :True,
             'years' : years,
             'monthly_income' : monthly_income_list,
