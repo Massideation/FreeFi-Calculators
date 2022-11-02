@@ -14,7 +14,7 @@ import numpy as np
 
 #app version
 
-app_version=" v 0.8.5"
+app_version=" v 0.8.9"
 
 # for local
 csv_dir = "app/data/" 
@@ -277,6 +277,12 @@ def wealth_building(request):
         else:
             asset_gain= float(input['Asset_gain'].replace(",","."))
 
+        # InflationLoss
+        if input['Inflation'] == "":
+            inflation=2.0
+        else:
+            inflation= float(input['Inflation'].replace(",","."))
+
 
         asset = income*asset_percent/100
         
@@ -298,6 +304,13 @@ def wealth_building(request):
 
         inv_diff_months= np.round(invest_whats_left/expense,2)
 
+        # adjusting for inflation
+        net_collatteral_adj = net_collatteral * (1 - inflation/100) 
+        
+        FFM_adj = np.round(net_collatteral_adj/expense,2)
+
+        
+        
         years =[1,]
         monthly_income_list=[income/12,]
         monthly_expense_list = [expense/12,]
@@ -313,8 +326,9 @@ def wealth_building(request):
         invest_whats_left_list = [invest_whats_left,]
         FFM_list = [FFM,]
         inv_diff_months_list= [inv_diff_months,]
-
-
+        # adjusting for inflation
+        adj_net_collateral_list = [net_collatteral_adj,]
+        adj_FFM_list = [FFM_adj,]
 
         for i in range(1,num_yrs):
           
@@ -350,14 +364,23 @@ def wealth_building(request):
             net_collateral = total_collateral - loan_plus_interest
             net_collateral_list.append(net_collateral)
 
+            net_collatteral_adj = net_collateral * (1 - inflation/100)          
+            adj_net_collateral_list.append(net_collatteral_adj)
+
+
             invest_whats_left = (invest_whats_left_list[i-1] + (income-expense))*(1+(asset_gain/100))
             invest_whats_left_list.append(invest_whats_left)
 
             FFM = net_collateral_list[i]/expense
             FFM_list.append(np.round(FFM,2))
 
+            FFM_adj = np.round(net_collatteral_adj/expense,2)
+            adj_FFM_list.append(FFM_adj)
+
             inv_diff_months= invest_whats_left_list[i]/expense
             inv_diff_months_list.append(np.round(inv_diff_months,2))
+
+
 
         selected_values = {
             'Monthly Income':income/12,
@@ -367,6 +390,7 @@ def wealth_building(request):
             'USDC Interest %' :usdc_interest,
             'Loan Interest %' :loan_interest,
             'Asset Gain %(CAGR)':asset_gain,
+            'Inflation %':inflation,
         }
 
         content={
@@ -388,6 +412,8 @@ def wealth_building(request):
             'FFM' : FFM_list,
             'inv_diff_months' : inv_diff_months_list,
             'selected_values' :selected_values,
+            'adjusted_net_collateral' : adj_net_collateral_list,
+            'adjusted_FFM' : adj_FFM_list,
         }
         
     return render(request,"wealth_building.html",context=content)

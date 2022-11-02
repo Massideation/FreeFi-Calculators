@@ -33,7 +33,7 @@ slider.oninput = function() {
 
 slider.addEventListener("mousemove",function(){
     const min = 10
-    const max = 80
+    const max = 90
     var x = (this.value-min)*100/(max-min);
     var color = 'linear-gradient(90deg, lightgreen '+ x + '%, white ' + x + '%)';
     slider.style.background=color
