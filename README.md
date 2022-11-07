@@ -1,2 +1,2 @@
 # FreeFi-Calculators
-Calculate the crypto opportunity of the past and future
+Calculate your crypto opportunity of the past and future
