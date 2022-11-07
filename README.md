@@ -1,2 +1,2 @@
-# crypto-calculators
-Calculate the crypto oppurtunity
+# freefi-calculators
+Calculate the crypto opportunity of the past and future
